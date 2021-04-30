@@ -2,9 +2,6 @@
 
 namespace Apfelfrisch\DataTransferObject;
 
-use ReflectionClass;
-use ReflectionProperty;
-
 abstract class DataTransferObject
 {
     /** @var list<string> */
@@ -13,41 +10,33 @@ abstract class DataTransferObject
     /** @var list<string> */
     protected array $onlyKeys = [];
 
+    /**
+     * @param array<string, mixed> $arrayOfParameters
+     */
+    public static function fromArrayWithCast(array $arrayOfParameters): static
+    {
+        $class = new Reflection(static::class);
+
+        return static::fromArray($class->castPoperties($arrayOfParameters));
+    }
+
+    /**
+     * @param array<string, mixed> $arrayOfParameters
+     */
     public static function fromArray(array $arrayOfParameters): static
     {
-        $class = new ReflectionClass(static::class);
+        $class = new Reflection(static::class);
 
-        if (null === $constructor = $class->getConstructor()) {
-            return new static;
-        }
-
-        if (count($parameters = $constructor->getParameters()) === 0) {
-            return new static;
-        }
-
-        $sortedParameters = [];
-
-        foreach ($parameters as $parameter) {
-            /** @var list<mixed> */
-            $sortedParameters[$parameter->getPosition()] = $arrayOfParameters[$parameter->name] ?? null;
-        }
-
-        return new static(...$sortedParameters);
+        return new static(...$class->sortConstructorParameters($arrayOfParameters));
     }
 
     public function all(): array
     {
-        $class = new ReflectionClass(static::class);
-
-        $properties = $class->getProperties(ReflectionProperty::IS_PUBLIC);
+        $class = new Reflection(static::class);
 
         $data = [];
 
-        foreach ($properties as $property) {
-            if ($property->isStatic()) {
-                continue;
-            }
-
+        foreach ($class->getProperties() as $property) {
             /** @var array<string, mixed> */
             $data[$property->getName()] = $property->getValue($this);
         }

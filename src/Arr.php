@@ -2,8 +2,6 @@
 
 namespace Apfelfrisch\DataTransferObject;
 
-use ArrayAccess;
-
 class Arr
 {
     /**
