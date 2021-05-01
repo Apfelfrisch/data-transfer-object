@@ -1,7 +1,8 @@
 <?php
 
-namespace Apfelfrisch\DataTransferObject\Casting;
+namespace Apfelfrisch\DataTransferObject\Casters;
 
+use Apfelfrisch\DataTransferObject\Caster;
 use Apfelfrisch\DataTransferObject\DataTransferObject;
 use Apfelfrisch\DataTransferObject\Reflection;
 use Attribute;
@@ -9,7 +10,7 @@ use InvalidArgumentException;
 use DateTime;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class DtoCast implements Cast
+class DtoCast implements Caster
 {
     public function __invoke(mixed $property, string $type): DataTransferObject
     {

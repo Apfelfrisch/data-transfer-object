@@ -2,8 +2,7 @@
 
 namespace Apfelfrisch\DataTransferObject;
 
-use Apfelfrisch\DataTransferObject\Casting\Cast;
-use Apfelfrisch\DataTransferObject\Casting\DtoCast;
+use Apfelfrisch\DataTransferObject\Casters\DtoCast;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionNamedType;
@@ -66,7 +65,7 @@ class Reflection
                     continue;
                 }
 
-                foreach ($propertiy->getAttributes(Cast::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+                foreach ($propertiy->getAttributes(Caster::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                     $arrayOfParameters[$propertiy->getName()] = $attribute->newInstance()(
                         $value, $type->getName()
                     );

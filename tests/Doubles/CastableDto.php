@@ -2,8 +2,8 @@
 
 namespace Apfelfrisch\DataTransferObject\Test\Doubles;
 
-use Apfelfrisch\DataTransferObject\Casting\DtoCast;
-use Apfelfrisch\DataTransferObject\Casting\DateTimeCast;
+use Apfelfrisch\DataTransferObject\Casters\DtoCast;
+use Apfelfrisch\DataTransferObject\Casters\DateTimeCast;
 use Apfelfrisch\DataTransferObject\DataTransferObject;
 use DateTime;
 

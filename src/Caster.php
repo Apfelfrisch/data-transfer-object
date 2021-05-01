@@ -1,8 +1,8 @@
 <?php
 
-namespace Apfelfrisch\DataTransferObject\Casting;
+namespace Apfelfrisch\DataTransferObject;
 
-interface Cast
+interface Caster
 {
     public function __invoke(mixed $property, string $type): mixed;
 }
