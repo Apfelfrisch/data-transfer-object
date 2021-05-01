@@ -11,23 +11,49 @@ abstract class DataTransferObject
     protected array $onlyKeys = [];
 
     /**
-     * @param array<string, mixed> $arrayOfParameters
+     * @param array<string, mixed> $parameters
      */
-    public static function fromArrayWithCast(array $arrayOfParameters): static
+    public static function fromArrayWithCast(array $parameters): static
     {
         $class = new Reflection(static::class);
 
-        return static::fromArray($class->castPoperties($arrayOfParameters));
+        return static::fromArray($class->castPoperties($parameters));
     }
 
     /**
-     * @param array<string, mixed> $arrayOfParameters
+     * @param array<string, mixed> $parameters
      */
-    public static function fromArray(array $arrayOfParameters): static
+    public static function fromArray(array $parameters): static
     {
         $class = new Reflection(static::class);
 
-        return new static(...$class->sortConstructorParameters($arrayOfParameters));
+        return new static(...$class->sortConstructorParameters($parameters));
+    }
+
+    /**
+     * @param list<array<string, mixed>> $arrayOfParameters
+     *
+     * @return list<static>
+     */
+    public static function listFromArray(array $arrayOfParameters): array
+    {
+        return array_map(
+            fn (array $parameters): static => static::fromArray($parameters),
+            $arrayOfParameters
+        );
+    }
+
+    /**
+     * @param list<array<string, mixed>> $arrayOfParameters
+     *
+     * @return list<static>
+     */
+    public static function listFromArrayWithCast(array $arrayOfParameters): array
+    {
+        return array_map(
+            fn (array $parameters): static => static::fromArrayWithCast($parameters),
+            $arrayOfParameters
+        );
     }
 
     public function all(): array

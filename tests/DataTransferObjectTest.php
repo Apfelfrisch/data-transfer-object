@@ -22,6 +22,55 @@ class DataTransferObjectTest extends TestCase
     }
 
     /** @test */
+    public function it_intanciates_from_an_array_and_casts_it_parameter_with_attributes()
+    {
+        $dto = CastableDto::fromArrayWithCast([
+            'date' => '2020-01-01',
+            'basicDto' => ['float' => 2.2, 'string' => 'three', 'int' => 1]
+        ]);
+
+        $this->assertInstanceOf(DateTime::class, $dto->date);
+        $this->assertInstanceOf(BasicDto::class, $dto->basicDto);
+    }
+
+    /** @test */
+    public function it_makes_a_ist_of_dtos_from_an_array()
+    {
+        $list = BasicDto::listFromArray([
+            ['string' => 'one', 'int' => 1, 'float' => 0.0],
+            ['string' => 'two', 'int' => 1, 'float' => 0.0],
+        ]);
+
+        $this->assertCount(2, $list);
+
+        $this->assertEquals('one', $list[0]->string);
+        $this->assertEquals('two', $list[1]->string);
+    }
+
+    /** @test */
+    public function it_makes_a_ist_of_dtos_from_an_array_and_casts_it_parameter_with_attributes()
+    {
+        $list = CastableDto::listFromArrayWithCast([
+            [
+                'date' => '2020-01-01',
+                'basicDto' => ['float' => 0.0, 'string' => 'one', 'int' => 1]
+            ],
+            [
+                'date' => '2020-02-01',
+                'basicDto' => ['float' => 0.0, 'string' => 'two', 'int' => 1]
+            ],
+        ]);
+
+        $this->assertCount(2, $list);
+
+        $this->assertInstanceOf(DateTime::class, $list[0]->date);
+        $this->assertInstanceOf(BasicDto::class, $list[0]->basicDto);
+        $this->assertInstanceOf(DateTime::class, $list[1]->date);
+        $this->assertInstanceOf(BasicDto::class, $list[1]->basicDto);
+    }
+
+
+    /** @test */
     public function it_return_its_public_properties_as_an_array()
     {
         $dto = BasicDto::fromArray(['float' => 2.2, 'string' => 'three', 'int' => 1]);
@@ -45,15 +94,4 @@ class DataTransferObjectTest extends TestCase
         $this->assertEquals(['int' => 1], $dto->except('string', 'float')->toArray());
     }
 
-    /** @test */
-    public function it_casts_properties_with_attributes()
-    {
-        $dto = CastableDto::fromArrayWithCast([
-            'date' => '2020-01-01',
-            'basicDto' => ['float' => 2.2, 'string' => 'three', 'int' => 1]
-        ]);
-
-        $this->assertInstanceOf(DateTime::class, $dto->date);
-        $this->assertInstanceOf(BasicDto::class, $dto->basicDto);
-    }
 }
