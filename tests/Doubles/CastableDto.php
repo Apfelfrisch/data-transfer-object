@@ -2,14 +2,16 @@
 
 namespace Apfelfrisch\DataTransferObject\Test\Doubles;
 
-use DateTime;
+use Apfelfrisch\DataTransferObject\Casting\DtoCast;
 use Apfelfrisch\DataTransferObject\Casting\DateTimeCast;
 use Apfelfrisch\DataTransferObject\DataTransferObject;
+use DateTime;
 
-class CastableAttributesDto extends DataTransferObject
+class CastableDto extends DataTransferObject
 {
     public function __construct(
         #[DateTimeCast]
-        public DateTime $date
+        public DateTime $date,
+        public BasicDto $basicDto,
     ) { }
 }

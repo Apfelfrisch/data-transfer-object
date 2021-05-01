@@ -9,7 +9,7 @@ use DateTime;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class DateTimeCast implements Cast
 {
-    public function __invoke(mixed $property): DateTime
+    public function __invoke(mixed $property, string $type): DateTime
     {
         if ($property instanceof DateTime) {
             return $property;

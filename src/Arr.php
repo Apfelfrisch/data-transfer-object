@@ -33,10 +33,6 @@ class Arr
 
     public static function exists(array $array, string $key): bool
     {
-        if ($array instanceof ArrayAccess) {
-            return $array->offsetExists($key);
-        }
-
         return array_key_exists($key, $array);
     }
 }

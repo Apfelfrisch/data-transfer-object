@@ -4,5 +4,5 @@ namespace Apfelfrisch\DataTransferObject\Casting;
 
 interface Cast
 {
-    public function __invoke(mixed $property): mixed;
+    public function __invoke(mixed $property, string $type): mixed;
 }

@@ -4,7 +4,9 @@ namespace Proengeno\EdifactMapper\Test;
 
 use Apfelfrisch\DataTransferObject\DataTransferObject;
 use Apfelfrisch\DataTransferObject\Test\Doubles\BasicDto;
-use Apfelfrisch\DataTransferObject\Test\Doubles\CastableAttributesDto;
+use Apfelfrisch\DataTransferObject\Test\Doubles\CastableDto;
+use Apfelfrisch\DataTransferObject\Test\Doubles\ComplexDto;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 
 class DataTransferObjectTest extends TestCase
@@ -46,8 +48,12 @@ class DataTransferObjectTest extends TestCase
     /** @test */
     public function it_casts_properties_with_attributes()
     {
-        $dto = CastableAttributesDto::fromArrayWithCast(['date' => '2020-01-01']);
+        $dto = CastableDto::fromArrayWithCast([
+            'date' => '2020-01-01',
+            'basicDto' => ['float' => 2.2, 'string' => 'three', 'int' => 1]
+        ]);
 
-        $this->assertInstanceOf(\DateTime::class, $dto->date);
+        $this->assertInstanceOf(DateTime::class, $dto->date);
+        $this->assertInstanceOf(BasicDto::class, $dto->basicDto);
     }
 }

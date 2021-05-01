@@ -3,18 +3,38 @@
 namespace Apfelfrisch\DataTransferObject;
 
 use Apfelfrisch\DataTransferObject\Casting\Cast;
-use ReflectionClass;
-use ReflectionProperty;
+use Apfelfrisch\DataTransferObject\Casting\DtoCast;
 use ReflectionAttribute;
+use ReflectionClass;
+use ReflectionNamedType;
+use ReflectionProperty;
+use InvalidArgumentException;
 
 class Reflection
 {
     private ReflectionClass $reflectionClass;
 
-    /** @param class-string $dataTransferObject*/
-    public function __construct(string $dataTransferObject)
+    public function __construct(string $classString)
     {
-        $this->reflectionClass = new ReflectionClass($dataTransferObject);
+        if (class_exists($classString)) {
+            $this->reflectionClass = new ReflectionClass($classString);
+        } else {
+            throw new InvalidArgumentException('Class "' . $classString . '" does not exist');
+        }
+    }
+
+    public static function new(string $classString): self
+    {
+        return new self($classString);
+    }
+
+    public function isSubclassOf(string $subclass): bool
+    {
+        if (($ParentClass = $this->reflectionClass->getParentClass()) instanceof ReflectionClass) {
+            return $ParentClass->name === $subclass;
+        }
+
+        return false;
     }
 
     /** @return list<ReflectionProperty> */
@@ -34,13 +54,24 @@ class Reflection
     public function castPoperties(array $arrayOfParameters): array
     {
         foreach ($this->getProperties() as $propertiy) {
-            if (null === $value = $arrayOfParameters[(string)$propertiy->name] ?? null) {
+            if (null === $value = $arrayOfParameters[$propertiy->getName()] ?? null) {
                 continue;
             }
 
-            foreach ($propertiy->getAttributes(Cast::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
-                $arrayOfParameters[(string)$propertiy->name] = $attribute->newInstance()($value);
-                break;
+
+            if ( ($type = $propertiy->getType()) instanceof ReflectionNamedType) {
+
+                if (self::new($type->getName())->isSubclassOf(DataTransferObject::class)) {
+                    $arrayOfParameters[$propertiy->getName()] = (new DtoCast)($value, $type->getName());
+                    continue;
+                }
+
+                foreach ($propertiy->getAttributes(Cast::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+                    $arrayOfParameters[$propertiy->getName()] = $attribute->newInstance()(
+                        $value, $type->getName()
+                    );
+                    break;
+                }
             }
         }
 
