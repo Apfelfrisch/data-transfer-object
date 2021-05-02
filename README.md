@@ -3,7 +3,7 @@
 ![Unit Test](https://github.com/Apfelfrisch/data-transfer-object/actions/workflows/phpunit.yml/badge.svg)
 ![Static Analysis](https://github.com/Apfelfrisch/data-transfer-object/actions/workflows/psalm.yml/badge.svg)
 
-This package is heavily inspired by [spatie/data-transfer-object](https://github.com/spatie/data-transfer-object). The main difference is that the DataTransferObject doesn't come with a constructor. That makes the initialization less magical which is a little nicer for static analysis.
+This package is heavily inspired by [spatie/data-transfer-object](https://github.com/spatie/data-transfer-object). The main difference is that the DataTransferObject doesn't come with a constructor. That makes the initialization less magical which is nicer for static analysis.
 ## Usage
 
 Here's what a DTO looks like:
