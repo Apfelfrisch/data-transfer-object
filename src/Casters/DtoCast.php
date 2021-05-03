@@ -22,6 +22,10 @@ class DtoCast implements Caster
             throw new InvalidArgumentException("Attributes of DataTransferObject has to be an array");
         }
 
+        /**
+         * @var class-string<DataTransferObject> $type
+         * @var array<string, mixed> $property
+         */
         return $type::fromArrayWithCast($property);
     }
 }

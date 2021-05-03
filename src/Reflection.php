@@ -75,7 +75,7 @@ class Reflection
      */
     public function castToConstructor(array $arrayOfParameters): array
     {
-        foreach ($this->constructorParameters() as $parameter) {
+        foreach ($this->getProperties() as $parameter) {
             if (! isset($arrayOfParameters[$parameter->getName()])) {
                 continue;
             }

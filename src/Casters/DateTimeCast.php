@@ -7,7 +7,7 @@ use Attribute;
 use InvalidArgumentException;
 use DateTime;
 
-#[Attribute(Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class DateTimeCast implements Caster
 {
     public function __invoke(mixed $property, string $type): DateTime
