@@ -109,18 +109,8 @@ class Reflection
      */
     public function sortToConstructor(array $arrayOfParameters)
     {
-        if (count($parameters = $this->constructorParameters()) === 0) {
-            return [];
-        }
-
-        $sortedParameters = [];
-
-        foreach ($parameters as $parameter) {
-            if (isset($arrayOfParameters[$parameter->getName()])) {
-                $sortedParameters[] = $arrayOfParameters[$parameter->name];
-            }
-        }
-
-        return $sortedParameters;
+        return array_map(fn(ReflectionParameter $parameter): mixed
+            => $arrayOfParameters[$parameter->getName()] ?? $parameter->getDefaultValue()
+        , $this->constructorParameters());
     }
 }
