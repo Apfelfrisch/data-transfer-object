@@ -10,6 +10,7 @@ use DateTime;
 class CastableDto extends DataTransferObject
 {
     public function __construct(
+        public string $string,
         #[DateTimeCast]
         public DateTime $date,
         public BasicDto $basicDto,

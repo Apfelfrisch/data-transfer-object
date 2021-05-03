@@ -60,7 +60,7 @@ class Reflection
 
             if ( ($type = $propertiy->getType()) instanceof ReflectionNamedType) {
 
-                if (self::new($type->getName())->isSubclassOf(DataTransferObject::class)) {
+                if (class_exists($type->getName()) && self::new($type->getName())->isSubclassOf(DataTransferObject::class)) {
                     $arrayOfParameters[$propertiy->getName()] = (new DtoCast)($value, $type->getName());
                     continue;
                 }

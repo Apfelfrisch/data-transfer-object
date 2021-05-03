@@ -25,10 +25,12 @@ class DataTransferObjectTest extends TestCase
     public function it_intanciates_from_an_array_and_casts_it_parameter_with_attributes()
     {
         $dto = CastableDto::fromArrayWithCast([
+            'string' => 'Hello',
             'date' => '2020-01-01',
             'basicDto' => ['float' => 2.2, 'string' => 'three', 'int' => 1]
         ]);
 
+        $this->assertIsString($dto->string);
         $this->assertInstanceOf(DateTime::class, $dto->date);
         $this->assertInstanceOf(BasicDto::class, $dto->basicDto);
     }
@@ -52,10 +54,12 @@ class DataTransferObjectTest extends TestCase
     {
         $list = CastableDto::listFromArrayWithCast([
             [
+                'string' => 'Hello',
                 'date' => '2020-01-01',
                 'basicDto' => ['float' => 0.0, 'string' => 'one', 'int' => 1]
             ],
             [
+                'string' => 'Hello',
                 'date' => '2020-02-01',
                 'basicDto' => ['float' => 0.0, 'string' => 'two', 'int' => 1]
             ],
@@ -63,8 +67,11 @@ class DataTransferObjectTest extends TestCase
 
         $this->assertCount(2, $list);
 
+        $this->assertIsString($list[0]->string);
         $this->assertInstanceOf(DateTime::class, $list[0]->date);
         $this->assertInstanceOf(BasicDto::class, $list[0]->basicDto);
+
+        $this->assertIsString($list[0]->string);
         $this->assertInstanceOf(DateTime::class, $list[1]->date);
         $this->assertInstanceOf(BasicDto::class, $list[1]->basicDto);
     }
