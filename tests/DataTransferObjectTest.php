@@ -6,6 +6,7 @@ use Apfelfrisch\DataTransferObject\DataTransferObject;
 use Apfelfrisch\DataTransferObject\Test\Doubles\BasicDto;
 use Apfelfrisch\DataTransferObject\Test\Doubles\CastableDto;
 use Apfelfrisch\DataTransferObject\Test\Doubles\ComplexDto;
+use Apfelfrisch\DataTransferObject\Test\Doubles\NestedDto;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
@@ -33,6 +34,25 @@ class DataTransferObjectTest extends TestCase
         $this->assertIsString($dto->string);
         $this->assertInstanceOf(DateTime::class, $dto->date);
         $this->assertInstanceOf(BasicDto::class, $dto->basicDto);
+    }
+
+    /** @test */
+    public function it_intanciates_from_an_nested_array_and_casts_it_parameter_with_attributes()
+    {
+        $dto = NestedDto::fromArrayWithCast([
+            'string' => 'Hello',
+            'castableDto' => [
+                'string' => 'Hello',
+                'date' => '2020-01-01',
+                'basicDto' => [
+                    'float' => 2.2, 'string' => 'three', 'int' => 1
+                ]
+            ]
+        ]);
+
+        $this->assertIsString($dto->string);
+        $this->assertInstanceOf(CastableDto::class, $dto->castableDto);
+        $this->assertInstanceOf(BasicDto::class, $dto->castableDto->basicDto);
     }
 
     /** @test */
