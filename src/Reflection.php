@@ -99,7 +99,9 @@ class Reflection
         $sortedParameters = [];
 
         foreach ($parameters as $parameter) {
-            $sortedParameters[] = $arrayOfParameters[$parameter->name] ?? null;
+            if (isset($arrayOfParameters[$parameter->name])) {
+                $sortedParameters[] = $arrayOfParameters[$parameter->name];
+            }
         }
 
         return $sortedParameters;
