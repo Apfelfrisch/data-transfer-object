@@ -7,6 +7,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionProperty;
+use ReflectionParameter;
 use InvalidArgumentException;
 
 class Reflection
@@ -32,12 +33,18 @@ class Reflection
         $class = $this->reflectionClass;
 
         while(($class = $class->getParentClass()) instanceof ReflectionClass) {
-            if ($class->name === $subclass) {
+            if ($class->getName() === $subclass) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /** @param ReflectionClass|class-string $interface */
+    public function implementsInterface(ReflectionClass|string $interface): bool
+    {
+        return $this->reflectionClass->implementsInterface($interface);
     }
 
     /** @return list<ReflectionProperty> */
@@ -50,27 +57,41 @@ class Reflection
     }
 
     /**
+     * @return list<ReflectionParameter>
+     */
+    public function constructorParameters()
+    {
+        if (null === $constructor = $this->reflectionClass->getConstructor()) {
+            return [];
+        }
+
+        return $constructor->getParameters();
+    }
+
+    /**
      * @param array<string, mixed> $arrayOfParameters
      *
      * @return array<string, mixed>
      */
-    public function castPoperties(array $arrayOfParameters): array
+    public function castToConstructor(array $arrayOfParameters): array
     {
-        foreach ($this->getProperties() as $propertiy) {
-            if (null === $value = $arrayOfParameters[$propertiy->getName()] ?? null) {
+        foreach ($this->constructorParameters() as $parameter) {
+            if (! isset($arrayOfParameters[$parameter->getName()])) {
                 continue;
             }
 
+            /** @var mixed */
+            $value = $arrayOfParameters[$parameter->getName()];
 
-            if ( ($type = $propertiy->getType()) instanceof ReflectionNamedType) {
+            if ( ($type = $parameter->getType()) instanceof ReflectionNamedType) {
 
                 if (class_exists($type->getName()) && self::new($type->getName())->isSubclassOf(DataTransferObject::class)) {
-                    $arrayOfParameters[$propertiy->getName()] = (new DtoCast)($value, $type->getName());
+                    $arrayOfParameters[$parameter->getName()] = (new DtoCast)($value, $type->getName());
                     continue;
                 }
 
-                foreach ($propertiy->getAttributes(Caster::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
-                    $arrayOfParameters[$propertiy->getName()] = $attribute->newInstance()(
+                foreach ($parameter->getAttributes(Caster::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+                    $arrayOfParameters[$parameter->getName()] = $attribute->newInstance()(
                         $value, $type->getName()
                     );
                     break;
@@ -86,20 +107,16 @@ class Reflection
      *
      * @return list<mixed>
      */
-    public function sortConstructorParameters(array $arrayOfParameters)
+    public function sortToConstructor(array $arrayOfParameters)
     {
-        if (null === $constructor = $this->reflectionClass->getConstructor()) {
-            return [];
-        }
-
-        if (count($parameters = $constructor->getParameters()) === 0) {
+        if (count($parameters = $this->constructorParameters()) === 0) {
             return [];
         }
 
         $sortedParameters = [];
 
         foreach ($parameters as $parameter) {
-            if (isset($arrayOfParameters[$parameter->name])) {
+            if (isset($arrayOfParameters[$parameter->getName()])) {
                 $sortedParameters[] = $arrayOfParameters[$parameter->name];
             }
         }

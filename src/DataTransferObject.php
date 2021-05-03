@@ -17,7 +17,7 @@ abstract class DataTransferObject
     {
         $class = new Reflection(static::class);
 
-        return static::fromArray($class->castPoperties($parameters));
+        return static::fromArray($class->castToConstructor($parameters));
     }
 
     /**
@@ -27,7 +27,7 @@ abstract class DataTransferObject
     {
         $class = new Reflection(static::class);
 
-        return new static(...$class->sortConstructorParameters($parameters));
+        return new static(...$class->sortToConstructor($parameters));
     }
 
     /**
