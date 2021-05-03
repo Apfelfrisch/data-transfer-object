@@ -29,8 +29,12 @@ class Reflection
 
     public function isSubclassOf(string $subclass): bool
     {
-        if (($ParentClass = $this->reflectionClass->getParentClass()) instanceof ReflectionClass) {
-            return $ParentClass->name === $subclass;
+        $class = $this->reflectionClass;
+
+        while(($class = $class->getParentClass()) instanceof ReflectionClass) {
+            if ($class->name === $subclass) {
+                return true;
+            }
         }
 
         return false;
