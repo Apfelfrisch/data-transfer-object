@@ -3,9 +3,11 @@
 namespace Proengeno\EdifactMapper\Test;
 
 use Apfelfrisch\DataTransferObject\DataTransferObject;
+use Apfelfrisch\DataTransferObject\Exceptions\ReflectionException;
 use Apfelfrisch\DataTransferObject\Test\Doubles\BasicDto;
 use Apfelfrisch\DataTransferObject\Test\Doubles\CastableDto;
 use Apfelfrisch\DataTransferObject\Test\Doubles\ComplexDto;
+use Apfelfrisch\DataTransferObject\Test\Doubles\MissingDefaultParameterValueDto;
 use Apfelfrisch\DataTransferObject\Test\Doubles\NestedDto;
 use DateTime;
 use PHPUnit\Framework\TestCase;
@@ -121,4 +123,12 @@ class DataTransferObjectTest extends TestCase
         $this->assertEquals(['int' => 1], $dto->except('string', 'float')->toArray());
     }
 
+    /** @test */
+    public function it_()
+    {
+        $this->expectException(ReflectionException::class);
+        $this->expectExceptionMessage('Failed to retrieve the default value for Parameter $int in ' . MissingDefaultParameterValueDto::class);
+
+        $dto = MissingDefaultParameterValueDto::fromArray([]);
+    }
 }

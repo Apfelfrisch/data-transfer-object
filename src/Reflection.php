@@ -3,6 +3,8 @@
 namespace Apfelfrisch\DataTransferObject;
 
 use Apfelfrisch\DataTransferObject\Casters\DtoCast;
+use Apfelfrisch\DataTransferObject\Exceptions\ReflectionException;
+use Exception;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionNamedType;
@@ -109,8 +111,12 @@ class Reflection
      */
     public function sortToConstructor(array $arrayOfParameters)
     {
-        return array_map(fn(ReflectionParameter $parameter): mixed
-            => $arrayOfParameters[$parameter->getName()] ?? $parameter->getDefaultValue()
-        , $this->constructorParameters());
+        return array_map(function(ReflectionParameter $parameter) use ($arrayOfParameters): mixed {
+            try {
+                return $arrayOfParameters[$parameter->getName()] ?? $parameter->getDefaultValue();
+            } catch (Exception $e) {
+                throw ReflectionException::missingParameterDefaultValue($this->reflectionClass, $parameter);
+            }
+        }, $this->constructorParameters());
     }
 }
