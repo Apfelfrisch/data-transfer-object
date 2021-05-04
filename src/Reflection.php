@@ -61,7 +61,7 @@ class Reflection
     /**
      * @return list<ReflectionParameter>
      */
-    public function constructorParameters()
+    public function constructorParameters(): array
     {
         if (null === $constructor = $this->reflectionClass->getConstructor()) {
             return [];
