@@ -25,7 +25,7 @@ class MyDTO extends DataTransferObject
     ) { }
 }
 ```
-You could construct this DTO with Attribute casting like so:
+You could construct this DTO with Parameter casting like so:
 
 ```php
 $dto = MyDTO::fromArrayWithCast([
