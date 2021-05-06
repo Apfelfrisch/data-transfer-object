@@ -18,6 +18,10 @@ class DtoCast implements Caster
             throw new InvalidArgumentException("$type has to be a Subclass of " . DataTransferObject::class);
         }
 
+        if ($property instanceof DataTransferObject) {
+            return $property;
+        }
+
         if (! is_array($property)) {
             throw new InvalidArgumentException("Attributes of DataTransferObject has to be an array");
         }
