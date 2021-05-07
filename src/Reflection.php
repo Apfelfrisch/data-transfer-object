@@ -14,6 +14,7 @@ use InvalidArgumentException;
 
 class Reflection
 {
+    /** @var ReflectionClass<object> */
     private ReflectionClass $reflectionClass;
 
     public function __construct(string $classString)
@@ -28,19 +29,6 @@ class Reflection
     public static function new(string $classString): self
     {
         return new self($classString);
-    }
-
-    public function isSubclassOf(string $subclass): bool
-    {
-        $class = $this->reflectionClass;
-
-        while(($class = $class->getParentClass()) instanceof ReflectionClass) {
-            if ($class->getName() === $subclass) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /** @param ReflectionClass|class-string $interface */
@@ -87,7 +75,7 @@ class Reflection
 
             if ( ($type = $parameter->getType()) instanceof ReflectionNamedType) {
 
-                if (class_exists($type->getName()) && self::new($type->getName())->isSubclassOf(DataTransferObject::class)) {
+                if (is_subclass_of($type->getName(), DataTransferObject::class)) {
                     $arrayOfParameters[$parameter->getName()] = (new DtoCast)($value, $type->getName());
                     continue;
                 }

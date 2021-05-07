@@ -14,7 +14,7 @@ class DtoCast implements Caster
 {
     public function __invoke(mixed $property, string $type): DataTransferObject
     {
-        if (! (new Reflection($type))->isSubclassOf(DataTransferObject::class)) {
+        if (! is_subclass_of($type, DataTransferObject::class)) {
             throw new InvalidArgumentException("$type has to be a Subclass of " . DataTransferObject::class);
         }
 
