@@ -4,6 +4,15 @@
 ![Static Analysis](https://github.com/Apfelfrisch/data-transfer-object/actions/workflows/psalm.yml/badge.svg)
 
 This package is heavily inspired by [spatie/data-transfer-object](https://github.com/spatie/data-transfer-object). The main difference is that the DataTransferObject doesn't come with a constructor. That makes the Initialization less magical which is nicer for static analysis.
+
+## Installation
+
+You can install the package via composer:
+
+```bash
+composer require apfelfrisch/data-transfer-object
+```
+
 ## Usage
 
 Here's what a DTO looks like:
