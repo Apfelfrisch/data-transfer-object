@@ -3,7 +3,7 @@
 namespace Proengeno\EdifactMapper\Test;
 
 use Apfelfrisch\DataTransferObject\DataTransferObject;
-use Apfelfrisch\DataTransferObject\Exceptions\ReflectionException;
+use Apfelfrisch\DataTransferObject\InvalidArgumentException;
 use Apfelfrisch\DataTransferObject\Test\Doubles\BasicDto;
 use Apfelfrisch\DataTransferObject\Test\Doubles\CastableDto;
 use Apfelfrisch\DataTransferObject\Test\Doubles\ComplexDto;
@@ -124,10 +124,10 @@ class DataTransferObjectTest extends TestCase
     }
 
     /** @test */
-    public function it_()
+    public function it_throws_in_exception_if_the_dto_cannot_instantiate()
     {
-        $this->expectException(ReflectionException::class);
-        $this->expectExceptionMessage('Failed to retrieve the default value for Parameter $int in ' . MissingDefaultParameterValueDto::class);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Can not instantiate Apfelfrisch\DataTransferObject\Test\Doubles\MissingDefaultParameterValueDto, argument $int is missing');
 
         $dto = MissingDefaultParameterValueDto::fromArray([]);
     }

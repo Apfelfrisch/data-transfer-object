@@ -3,14 +3,13 @@
 namespace Apfelfrisch\DataTransferObject;
 
 use Apfelfrisch\DataTransferObject\Casters\DtoCast;
-use Apfelfrisch\DataTransferObject\Exceptions\ReflectionException;
+use Apfelfrisch\DataTransferObject\InvalidArgumentException;
 use Exception;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionParameter;
-use InvalidArgumentException;
 
 class Reflection
 {
@@ -103,7 +102,7 @@ class Reflection
             try {
                 return $arrayOfParameters[$parameter->getName()] ?? $parameter->getDefaultValue();
             } catch (Exception $e) {
-                throw ReflectionException::missingParameterDefaultValue($this->reflectionClass, $parameter);
+                throw InvalidArgumentException::missingArgument($this->reflectionClass, $parameter);
             }
         }, $this->constructorParameters());
     }
