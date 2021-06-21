@@ -19,6 +19,7 @@ Here's what a DTO looks like:
 
 ```php
 use Apfelfrisch\DataTransferObject;
+use Apfelfrisch\DataTransferObject\Casters\DateTimeCast;
 
 class MyDTO extends DataTransferObject
 {
